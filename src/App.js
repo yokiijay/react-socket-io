@@ -8,7 +8,7 @@ const App = () => {
   const socket = useRef(null)
 
   useEffect(()=>{
-    socket.current = io.connect('http://192.168.31.212:5000')
+    socket.current = io.connect('http://localhost:5000')
 
     socket.current.on('message', db=>setDb(db))
 
@@ -38,7 +38,7 @@ const App = () => {
         color: 'white',
         border: 'none',
         fontSize: '24px'
-      }} onClick={handleClick}>给洗发发消息</button>
+      }} onClick={handleClick}>发消息</button>
       <ul style={{
         listStyleType: 'none',
         padding: 0
