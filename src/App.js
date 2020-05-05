@@ -1,26 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState, useRef } from 'react'
+import io from 'socket.io-client'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+const App = () => {
+  const [msg, setMsg] = useState('')
+  const [db, setDb] = useState([])
+  const socket = useRef(null)
+
+  useEffect(()=>{
+    socket.current = io.connect('http://192.168.31.212:5000')
+
+    socket.current.on('message', db=>setDb(db))
+
+  }, [])
+
+
+  const handleClick = ()=>{
+    socket.current.emit('message', msg)
+  }
+
+  return(
+    <div style={{
+      textAlign: 'center',
+      fontSize: '2rem'
+    }}>
+      <input style={{
+        borderRadius: '6px',
+        width: '80vw',
+        height: '10vh',
+        marginBottom: '30px',
+        border: '1px solid #ddd'
+      }} value={msg} onChange={ev=>setMsg(ev.target.value)} type="text"/> <br/>
+      <button style={{
+        padding: '8px 16px',
+        borderRadius: '6px',
+        background: 'hotpink',
+        color: 'white',
+        border: 'none',
+        fontSize: '24px'
+      }} onClick={handleClick}>给洗发发消息</button>
+      <ul style={{
+        listStyleType: 'none',
+        padding: 0
+      }}>
+        {db.map((item, index)=><li key={index}>{item}</li>)}
+      </ul>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
